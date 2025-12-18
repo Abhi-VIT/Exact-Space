@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1 & 2: Predictive Operational Analysis & RAG</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use the Inter font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
+        .slide {
+            height: 100vh;
+            width: 100%;
+            display: none; /* Hidden by default, managed by JS */
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 4rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0; /* Start hidden for transition */
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .nav-button {
+            transition: all 0.2s;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .rag-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <!-- Slide 1: Title Slide (Task 1 & 2) -->
+    <section id="slide-1" class="slide active bg-blue-900 text-white">
+        <div class="max-w-5xl text-center">
+            <h1 class="text-7xl font-extrabold mb-4 tracking-tight">
+                Predictive Operational Analysis (Task 1 & 2)
+            </h1>
+            <p class="text-2xl font-light opacity-80 mt-6">
+                Integrating Data Insights with Retrieval-Augmented Generation (RAG)
+            </p>
+            <div class="mt-16 text-lg font-medium">
+                <p>Data Science & Engineering Review</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: Data Preparation (Task 1) -->
+    <section id="slide-2" class="slide bg-white">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                Data Preparation & Cleaning (Task 1)
+            </h2>
+            <div class="grid md:grid-cols-3 gap-10">
+                
+                <div class="p-6 bg-gray-100 rounded-xl shadow-lg border-t-4 border-red-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-red-600">Missing Values</h3>
+                    <p class="text-gray-700">
+                        Missing values were handled primarily through **Time-based Interpolation**. This approach preserves the time series continuity, which is critical for sequence-dependent modeling.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-gray-100 rounded-xl shadow-lg border-t-4 border-red-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-red-600">Feature Scaling</h3>
+                    <p class="text-gray-700">
+                        All numerical features were **Standardized (Z-score scaling)**. This prevents variables with larger magnitudes (e.g., high temperatures) from dominating the distance-based clustering models.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-gray-100 rounded-xl shadow-lg border-t-4 border-red-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-red-600">Shutdown Detection</h3>
+                    <p class="text-gray-700">
+                        Data points corresponding to system shutdowns or idle periods were detected and **filtered out**. The analysis was specifically focused on **active operational data** (`active_data`) to prevent shutdown data from skewing state definitions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Analysis Strategy (Task 1) -->
+    <section id="slide-3" class="slide bg-gray-100">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                Core Analysis Strategy (Task 1)
+            </h2>
+            <div class="space-y-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-8 border-blue-500">
+                    <h3 class="text-2xl font-semibold mb-2 text-blue-800">Operational State Clustering</h3>
+                    <p class="text-gray-700">
+                        **K-Means Clustering** was used to segment the scaled, active data into distinct operational modes (e.g., **Cluster 1: Normal Operation**, **Cluster 0: Low Efficiency**). This provides contextual baselines for subsequent analysis.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-8 border-blue-500">
+                    <h3 class="text-2xl font-semibold mb-2 text-blue-800">Contextual Anomaly Detection</h3>
+                    <p class="text-gray-700">
+                        The **Isolation Forest** model was run **separately within each cluster**. This contextual approach ensures true anomalies are detected by comparing data points only to their relevant operational state, rather than a global average.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-8 border-blue-500">
+                    <h3 class="text-2xl font-semibold mb-2 text-blue-800">Root Cause Analysis & Future Forecasting</h3>
+                    <p class="text-gray-700">
+                        **Local Z-Score Analysis** was applied to anomalies to pinpoint the most deviant variable ($\pm 30$ min window), identifying the potential root cause. This information feeds into our next step: developing **Predictive Forecasting Models** for state transitions and precursor signals.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: Key Insights & Operational States (Task 1) -->
+    <section id="slide-4" class="slide bg-white">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                Key Insights on Volatility (Task 1)
+            </h2>
+            <div class="flex flex-col md:flex-row gap-10">
+                
+                <div class="md:w-1/2 p-6 bg-blue-50 rounded-xl shadow-lg">
+                    <h3 class="text-3xl font-bold mb-4 text-blue-800">Anomaly Distribution</h3>
+                    <div class="space-y-4">
+                        <p class="text-lg text-gray-700">Total Anomalies Detected: <span class="text-3xl font-extrabold text-red-600">2949</span></p>
+                        <ul class="list-disc list-inside ml-4 text-gray-700">
+                            <li>Cluster 0 (Low Efficiency): **77** anomalies</li>
+                            <li>Cluster 1 (Normal Operation): <span class="text-red-600 font-bold">2872</span> anomalies</li>
+                        </ul>
+                    </div>
+                    <p class="mt-4 text-xl font-semibold text-red-700">
+                        Finding: **97.4%** of anomalies occur in the supposedly "Normal" state, indicating significant underlying volatility.
+                    </p>
+                </div>
+
+                <div class="md:w-1/2 p-6 bg-blue-50 rounded-xl shadow-lg">
+                    <h3 class="text-3xl font-bold mb-4 text-blue-800">Root Cause Pattern</h3>
+                    <ul class="list-disc list-inside space-y-3 text-lg font-medium text-gray-700">
+                        <li>The most significant anomalies (highest Z-scores) are consistently driven by large deviations (spikes/drops) in **Draft variables** (`Cyclone_Outlet_Gas_draft`, `Cyclone_Inlet_Draft`).</li>
+                        <li>This points to the **Draft Control Loop** and related physical equipment as the primary instability factor during normal operation.</li>
+                        <li>Conversely, the Low Efficiency state (Cluster 0) is relatively stable, suffering fewer extreme events.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Conclusion & Recommendations (Task 1) -->
+    <section id="slide-5" class="slide bg-blue-900 text-white">
+        <div class="max-w-5xl">
+            <h2 class="text-5xl font-bold mb-12 text-blue-300 border-b-4 border-blue-500 pb-3">
+                Conclusion & Recommendations (Task 1)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4 text-blue-200">Actionable Conclusion</h3>
+                    <p class="text-lg font-light">
+                        The "Normal Operation" state is not truly stable; its stability is frequently compromised by sudden, high-magnitude deviations in the Draft System. This constant state of micro-disruption must be addressed to improve overall process reliability and efficiency.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4 text-blue-200">Recommendations for Task 2</h3>
+                    <ul class="list-disc list-inside space-y-3 text-lg font-medium text-blue-200">
+                        <li>**Prioritize Draft System:** Immediately focus engineering on investigating the Draft Control Loop hardware and logic.</li>
+                        <li>**Real-Time Monitoring:** Implement a real-time **Local Z-Score alert** specifically for Draft variables.</li>
+                        <li>**Predictive Focus:** Develop models to forecast the occurrence of Draft-related anomalies and the transition into the Low Efficiency state.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: System Architecture Overview (Task 2) -->
+    <section id="slide-6" class="slide bg-gray-100">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                System Architecture: The RAG Pipeline (Task 2)
+            </h2>
+            <p class="text-lg mb-8 text-gray-700">
+                The RAG prototype connects unstructured technical documentation (PDFs) to a Large Language Model (LLM) for grounded, verifiable answers regarding system operation and maintenance.
+            </p>
+            <div class="flex justify-between items-start space-x-4">
+                
+                <!-- Step 1: Query -->
+                <div class="rag-step">
+                    <div class="bg-blue-600 text-white rounded-full h-16 w-16 flex items-center justify-center text-xl font-bold mb-3 shadow-lg">1</div>
+                    <p class="text-xl font-semibold text-blue-900">User Query</p>
+                    <p class="text-sm text-gray-600 mt-1">"What causes a draft drop?"</p>
+                </div>
+                
+                <svg class="w-12 h-12 text-gray-400 mt-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 7 12 12 7 17"></polyline><line x1="17" y1="12" x2="12" y2="12"></line></svg>
+                
+                <!-- Step 2: Retrieval -->
+                <div class="rag-step">
+                    <div class="bg-indigo-600 text-white rounded-full h-16 w-16 flex items-center justify-center text-xl font-bold mb-3 shadow-lg">2</div>
+                    <p class="text-xl font-semibold text-indigo-900">Retrieval (FAISS)</p>
+                    <p class="text-sm text-gray-600 mt-1">Embed query, search vector index for top 'k' documents.</p>
+                </div>
+
+                <svg class="w-12 h-12 text-gray-400 mt-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 7 12 12 7 17"></polyline><line x1="17" y1="12" x2="12" y2="12"></line></svg>
+
+                <!-- Step 3: Augmentation -->
+                <div class="rag-step">
+                    <div class="bg-teal-600 text-white rounded-full h-16 w-16 flex items-center justify-center text-xl font-bold mb-3 shadow-lg">3</div>
+                    <p class="text-xl font-semibold text-teal-900">Augmentation</p>
+                    <p class="text-sm text-gray-600 mt-1">Format retrieved text as context for the LLM prompt.</p>
+                </div>
+
+                <svg class="w-12 h-12 text-gray-400 mt-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 7 12 12 7 17"></polyline><line x1="17" y1="12" x2="12" y2="12"></line></svg>
+
+                <!-- Step 4: Generation -->
+                <div class="rag-step">
+                    <div class="bg-pink-600 text-white rounded-full h-16 w-16 flex items-center justify-center text-xl font-bold mb-3 shadow-lg">4</div>
+                    <p class="text-xl font-semibold text-pink-900">Generation</p>
+                    <p class="text-sm text-gray-600 mt-1">LLM answers based only on provided context.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: RAG Component Breakdown (Task 2) -->
+    <section id="slide-7" class="slide bg-white">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                RAG Component Breakdown (Task 2)
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="p-6 bg-gray-50 rounded-xl shadow-lg border-l-4 border-indigo-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-indigo-700">Ingestion Pipeline</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                        <li>**Document Loader:** <span class="font-mono text-sm bg-gray-200 p-1 rounded">fitz (PyMuPDF)</span> for robust PDF parsing.</li>
+                        <li>**Chunking Strategy:** <span class="font-mono text-sm bg-gray-200 p-1 rounded">RecursiveCharacterTextSplitter</span> to maintain semantic boundaries.
+                            <ul class="list-none ml-6 text-sm italic mt-1">
+                                <li>Chunk Size: 500 characters, Overlap: 100 characters.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="p-6 bg-gray-50 rounded-xl shadow-lg border-l-4 border-teal-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-teal-700">Embedding & Indexing</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                        <li>**Embedding Model:** <span class="font-mono text-sm bg-gray-200 p-1 rounded">SentenceTransformer (all-MiniLM-L6-v2)</span> chosen for speed and efficiency.</li>
+                        <li>**Vector Database:** <span class="font-mono text-sm bg-gray-200 p-1 rounded">FAISS (IndexFlatL2)</span> used for fast, in-memory vector similarity search (L2 distance).</li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-2 p-6 bg-gray-50 rounded-xl shadow-lg border-l-4 border-pink-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-pink-700">Orchestration & Generation</h3>
+                    <p class="text-gray-700">
+                        Python functions manage the flow from embedding the query to searching the **FAISS index** to compiling the context. The final prompt integrates the retrieved content before passing it to the placeholder LLM for an answer.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: RAG Challenges & Guardrails 1 (Task 2) -->
+    <section id="slide-8" class="slide bg-gray-100">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-900 border-b-4 border-blue-500 pb-3">
+                RAG Challenge: Retrieval Strategy
+            </h2>
+            <p class="text-lg mb-8 text-gray-700">
+                The effectiveness of RAG hinges entirely on retrieving the most relevant context.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-orange-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-orange-700">K-Value Optimization</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                        <li>The parameter **k** (<span class="font-mono text-sm bg-gray-200 p-1 rounded">retrieval_k=5</span>) determines the number of chunks returned.</li>
+                        <li>**Too small (low k):** Risk of missing crucial context.</li>
+                        <li>**Too large (high k):** Risk of adding noise or overwhelming the LLM's context window.</li>
+                        <li>**Solution:** Requires iterative testing with domain-specific queries to find the optimal balance.</li>
+                    </ul>
+                </div>
+
+                <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-orange-500">
+                    <h3 class="text-2xl font-semibold mb-3 text-orange-700">Chunking Granularity</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                        <li>**Chunk Size (500) and Overlap (100)** are hyperparameters directly impacting retrieval success.</li>
+                        <li>**Small chunks:** Better precision, but risk losing required surrounding context.</li>
+                        <li>**Large chunks:** Better context, but lower precision/higher noise in retrieval.</li>
+                        <li>**Solution:** Recursive text splitting helps preserve structure, but fine-tuning based on document structure (e.g., splitting by section/paragraph first) is recommended.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: RAG Challenges & Guardrails 2 (Task 2) -->
+    <section id="slide-9" class="slide bg-blue-900 text-white">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-5xl font-bold mb-12 text-blue-300 border-b-4 border-blue-500 pb-3">
+                RAG Challenges: Hallucination Prevention & Scalability
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4 text-red-400">Hallucination Guardrails</h3>
+                    <ul class="list-disc list-inside space-y-3 text-lg font-light text-blue-200">
+                        <li>**Context Constraint:** The LLM prompt must strictly instruct the model to answer **ONLY** using the provided retrieved documents.</li>
+                        <li>**Citation Enforcement:** Answers must include citations (source file and chunk ID) derived from the retrieved metadata to ensure verifiability.</li>
+                        <li>**Fall-back Mechanism:** If retrieval yields no relevant results, the LLM should be instructed to respond "Information not found in documentation" rather than guessing.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4 text-green-400">Scalability Strategy</h3>
+                    <ul class="list-disc list-inside space-y-3 text-lg font-medium text-blue-200">
+                        <li>**Current:** <span class="font-mono text-sm bg-blue-800 p-1 rounded">FAISS</span> is fast but operates **in-memory**, limiting the size of the documentation corpus.</li>
+                        <li>**Future Scaling:** Transition to a persistent, distributed Vector Database (e.g., Pinecone, Milvus, or cloud-native options).</li>
+                        <li>**Benefit:** Allows the RAG system to handle tens of thousands of engineering manuals and operational documents efficiently without memory constraints.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Controls and JS -->
+    <div id="controls" class="fixed bottom-8 right-8 flex space-x-4">
+        <button id="prevBtn" class="nav-button bg-gray-500 text-white py-3 px-8 rounded-xl font-semibold shadow-md opacity-50 cursor-not-allowed" disabled>
+            Previous
+        </button>
+        <button id="nextBtn" class="nav-button bg-blue-600 text-white py-3 px-8 rounded-xl font-semibold shadow-xl">
+            Next
+        </button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        let currentSlideIndex = 0;
+
+        function updateSlideVisibility() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            // Update button states
+            prevBtn.disabled = currentSlideIndex === 0;
+            prevBtn.classList.toggle('opacity-50', currentSlideIndex === 0);
+            prevBtn.classList.toggle('cursor-not-allowed', currentSlideIndex === 0);
+            prevBtn.classList.toggle('bg-gray-700', currentSlideIndex !== 0);
+            
+            nextBtn.disabled = currentSlideIndex === slides.length - 1;
+            nextBtn.classList.toggle('opacity-50', currentSlideIndex === slides.length - 1);
+            nextBtn.classList.toggle('cursor-not-allowed', currentSlideIndex === slides.length - 1);
+        }
+
+        function goToNextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                updateSlideVisibility();
+            }
+        }
+
+        function goToPrevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlideVisibility();
+            }
+        }
+
+        nextBtn.addEventListener('click', goToNextSlide);
+        prevBtn.addEventListener('click', goToPrevSlide);
+
+        // Initial update
+        updateSlideVisibility();
+    </script>
+
+</body>
+</html>
